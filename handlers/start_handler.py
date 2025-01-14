@@ -1,6 +1,6 @@
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-YA_URL = 'https://oauth.yandex.ru/authorize?response_type=code&client_id=0ef7bbdc03344ff5bebb70187541dbd9'
-HELLO_MESSAGE = "Привет! Этот бот помогает узнать, что сейчас происходит с твоим умным домом. Чтобы начать пользоваться ботом, нужно привязать его к своему умному дому"
+from config import YA_URL
+from config import HELLO_MESSAGE
 
 async def command_start_handler(message: Message) -> None:
     hello_mess = HELLO_MESSAGE
