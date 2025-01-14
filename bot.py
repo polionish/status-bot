@@ -11,20 +11,23 @@ from config import BOT_TOKEN
 from handlers.start_handler import command_start_handler
 from handlers.help_handler import handle_start_command
 from handlers.echo_handler import echo_handler
+from handlers.link_account_handler import command_link_account_handler
+from handlers.unlink_account_handler import unlink_account_handler
 from oauth_server import init_app
 from aiohttp import web
 from logger_config import setup_logging
 from aiogram.types import BotCommand
+from database import create_db
 
 setup_logging()
 logger = logging.getLogger(__name__)
 
-# Установка команд меню (опционально)
 async def set_commands(bot: Bot):
     commands = [
         BotCommand(command="/start", description="Информация о боте"),
         BotCommand(command="/help", description="Список доступных команд"),
-        BotCommand(command="/link_account", description="Привязать другой аккаунт")
+        BotCommand(command="/link_account", description="Привязать аккаунт"),
+        BotCommand(command="/unlink_account", description="Отвязать аккаунт")
     ]
     await bot.set_my_commands(commands)
     
@@ -42,7 +45,6 @@ async def start_oauth_server():
         await asyncio.sleep(3600)
 
 async def start_bot() -> None:
-    # Initialize Bot instance with default bot properties which will be passed to all API calls
     bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher()
 
@@ -50,12 +52,14 @@ async def start_bot() -> None:
 
     dp.message.register(command_start_handler, CommandStart())
     dp.message.register(handle_start_command, Command('help'))
+    dp.message.register(command_link_account_handler, Command('link_account'))
+    dp.message.register(unlink_account_handler, Command('unlink_account'))
     dp.message.register(echo_handler)
 
-    # And the run events dispatching
     await dp.start_polling(bot)
 
 async def main():
+    create_db()
     logger.info("Запуск приложения...")
     setup_logging()
     bot_task = asyncio.create_task(start_bot())
