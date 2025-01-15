@@ -19,7 +19,7 @@ def get_devices(oauth_token):
         return response.json()
     else:
         logger.error(f"Ошибка: {response.status_code} {response.text}")
-        return None  # Обработка ошибок
+        return None  
 
 async def devices_handler(message: types.Message):
     global bot
@@ -33,7 +33,6 @@ async def devices_handler(message: types.Message):
         logger.info(f"!!!!{devices}")
         logger.info(f"!!!!{device_names}")
         if devices:
-            # devices_info = "\n".join([device['name'] for device in devices])  # Выводим названия устройств
             await message.answer(f"Ваши устройства:\n{device_names}")
         else:
             await message.answer("Не удалось получить устройства. Попробуйте позже.")

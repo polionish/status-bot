@@ -10,7 +10,8 @@ def setup_logging():
         backupCount=3,
         encoding="utf-8"
     )
-    file_handler.setLevel(logging.INFO)  # Уровень логирования для файла
+    # Уровень логирования
+    file_handler.setLevel(logging.INFO)  
     file_handler.setFormatter(logging.Formatter(log_format))
     
     console_handler = logging.StreamHandler()

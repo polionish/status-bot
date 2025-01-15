@@ -53,7 +53,6 @@ async def handle_oauth_response(request):
         logger.info(f"Получен код авторизации: {code} и идентификатор пользователя: {tg_user_id}")
         access_token = await get_access_token(code, tg_user_id)
         if access_token:
-            # Сообщаем пользователю об успешной авторизации
             await notify_user_success(int(tg_user_id))
             return web.Response(text=f"Вы успешно авторизовались! Токен доступа: {access_token}")
         else:

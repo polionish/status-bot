@@ -11,9 +11,9 @@ from config import BOT_TOKEN
 from handlers.start_handler import command_start_handler
 from handlers.help_handler import handle_start_command
 from handlers.devices_handler import devices_handler
-from handlers.echo_handler import echo_handler
-from handlers.link_account_handler import command_link_account_handler
-from handlers.unlink_account_handler import unlink_account_handler
+# from handlers.echo_handler import echo_handler
+# from handlers.link_account_handler import command_link_account_handler
+# from handlers.unlink_account_handler import unlink_account_handler
 from oauth_server import init_oauth_app
 from aiohttp import web
 from logger_config import setup_logging
@@ -32,8 +32,8 @@ async def set_commands(bot: Bot):
         BotCommand(command="/start", description="Информация о боте"),
         BotCommand(command="/help", description="Список доступных команд"),
         BotCommand(command="/devices", description="Список ваших устройств"),
-        BotCommand(command="/link_account", description="Привязать аккаунт"),
-        BotCommand(command="/unlink_account", description="Отвязать аккаунт")
+        # BotCommand(command="/link_account", description="Привязать аккаунт"),
+        # BotCommand(command="/unlink_account", description="Отвязать аккаунт")
     ]
     await bot.set_my_commands(commands)
     
@@ -56,9 +56,9 @@ async def start_bot() -> None:
     dp.message.register(command_start_handler, CommandStart())
     dp.message.register(devices_handler, Command('devices'))
     dp.message.register(handle_start_command, Command('help'))
-    dp.message.register(command_link_account_handler, Command('link_account'))
-    dp.message.register(unlink_account_handler, Command('unlink_account'))
-    dp.message.register(echo_handler)
+    # dp.message.register(command_link_account_handler, Command('link_account'))
+    # dp.message.register(unlink_account_handler, Command('unlink_account'))
+    # dp.message.register(echo_handler)
 
     await dp.start_polling(bot)
 
