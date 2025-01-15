@@ -7,6 +7,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
 from aiogram.filters import Command
+from requests import session
 from config import BOT_TOKEN, HOST, PORT
 from handlers.start_handler import command_start_handler
 from handlers.help_handler import handle_start_command
@@ -60,7 +61,12 @@ async def start_bot() -> None:
     # dp.message.register(unlink_account_handler, Command('unlink_account'))
     # dp.message.register(echo_handler)
 
-    await dp.start_polling(bot)
+    try:
+        await dp.start_polling(bot)
+    finally:
+        logger.info("сессия закрыта")
+        await bot.session.close()
+        logger.info("сессия закрыта (точно)")
 
 async def main():
     create_db()
