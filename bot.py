@@ -7,7 +7,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
 from aiogram.filters import Command
-from config import BOT_TOKEN
+from config import BOT_TOKEN, HOST, PORT
 from handlers.start_handler import command_start_handler
 from handlers.help_handler import handle_start_command
 from handlers.devices_handler import devices_handler
@@ -44,9 +44,9 @@ async def start_oauth_server():
     app = await init_oauth_app()
     runner = web.AppRunner(app)
     await runner.setup()
-    site = web.TCPSite(runner, 'localhost', 8000)
+    site = web.TCPSite(runner, HOST, PORT)
     await site.start()
-    logger.info("OAuth сервер запущен на http://localhost:8000")
+    logger.info(f"OAuth сервер запущен на http://{HOST}:{PORT}")
     while True:
         await asyncio.sleep(3600)
 
