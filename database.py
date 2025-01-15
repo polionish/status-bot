@@ -1,5 +1,18 @@
 import sqlite3
 
+def drop_tokens_table():
+    conn = sqlite3.connect('tokens.db')
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        DROP TABLE IF EXISTS tokens
+    ''')
+
+    conn.commit()
+    conn.close()
+
+drop_tokens_table()
+
 def create_db():
     conn = sqlite3.connect('tokens.db')
     cursor = conn.cursor()

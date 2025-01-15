@@ -5,6 +5,7 @@ import aiohttp
 from logger_config import setup_logging
 from config import CLIENT_ID, SECRET_CLIENT, REDIRECT_URI, TOKEN_URI
 from database import create_db, store_tokens, get_tokens, update_tokens
+from handlers.start_handler import notify_user_success
 
 setup_logging()
 logger = logging.getLogger(__name__)
@@ -42,23 +43,26 @@ async def get_access_token(code, user_id):
                 return None
 
 async def handle_oauth_response(request):
-    logger.info(f"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    logger.info("Обрабатываем OAuth-ответ...")
     params = parse_qs(request.query_string)
     code = params.get('code', [None])[0]
     tg_user_id = params.get('state', [None])[0]
     logger.info(f"Получен Telegram User ID: {tg_user_id}")
+    
     if code and tg_user_id:
         logger.info(f"Получен код авторизации: {code} и идентификатор пользователя: {tg_user_id}")
         access_token = await get_access_token(code, tg_user_id)
         if access_token:
+            # Сообщаем пользователю об успешной авторизации
+            await notify_user_success(int(tg_user_id))
             return web.Response(text=f"Вы успешно авторизовались! Токен доступа: {access_token}")
         else:
             return web.Response(text="Не удалось получить токен. Попробуйте снова.")
     else:
         logger.warning("Код авторизации отсутствует.")
         return web.Response(text="Не получилось привязать аккаунт, повторите попытку!")
-    
-async def init_app():
+
+async def init_oauth_app():
     app = web.Application()
     app.router.add_get('/callback', handle_oauth_response)
     logger.info("Маршрут для OAuth сервера настроен")
@@ -66,7 +70,7 @@ async def init_app():
 
 def main():
     setup_logging()
-    app = init_app()
+    app = init_oauth_app()
     web.run_app(app, port=8000)
 
 if __name__ == "__main__":

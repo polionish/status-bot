@@ -4,7 +4,6 @@ from logging.handlers import RotatingFileHandler
 def setup_logging():
     log_format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
-    # Создаем обработчик для вывода в файл
     file_handler = RotatingFileHandler(
         "app.log",
         maxBytes=5 * 1024 * 1024,
